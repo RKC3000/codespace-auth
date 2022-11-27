@@ -1,0 +1,20 @@
+{
+  "name": "codespace-auth",
+  "version": "1.0.0",
+  "description": "An auth system totally designed in github codespace",
+  "main": "index.js",
+  "scripts": {
+    "start": "index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RKC3000/codespace-auth.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RKC3000/codespace-auth/issues"
+  },
+  "homepage": "https://github.com/RKC3000/codespace-auth#readme"
+}
