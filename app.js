@@ -4,9 +4,11 @@ const User = require("./model/user");
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const cookiParser = require("cookie-parser");
 
 const app = express();
-app.use(express.json());
+app.use(express.json()); // middleware, to parse json data
+app.use(cookiParser()); // middleware // to understand cookies in the browser
 
 app.get("/", (req, res) => {
   res.send("<h1>Server is working</h1>");
@@ -57,9 +59,42 @@ app.post("/register", async (req, res) => {
 app.post("/login", async (req, res) => {
   try {
     // get all data from frontend/body
+    const { email, password } = req.body;
+    //validation
+    if (!(email && password)) {
+      res.status(400).send("send all data");
+    }
+
     // find user in DB
+    const user = await User.findOne({ email });
+    // assignment - if user is not there, then what?
+
     // match the password
-    //
+    if (user && (await bcrypt.compare(password, user.password))) {
+      const token = jwt.sign(
+        { id: user._id },
+        "shhhh", // process.env.jwtsecret
+        {
+          expiresIn: "2h",
+        }
+      );
+      user.token = token;
+      user.password = undefined;
+
+      // send token in user cookie
+      // cookie section
+      const option = {
+        expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+        httpsOnly: true,
+      };
+      res.status(200).cookie("token", token, options).json({
+        success: true,
+        token,
+        user,
+      });
+    }
+
+    // send a token
   } catch (error) {
     console.log(error);
   }
