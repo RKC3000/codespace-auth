@@ -5,6 +5,7 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const cookiParser = require("cookie-parser");
+const auth = require("./middleware/auth");
 
 const app = express();
 app.use(express.json()); // middleware, to parse json data
@@ -98,6 +99,11 @@ app.post("/login", async (req, res) => {
   } catch (error) {
     console.log(error);
   }
+});
+
+app.get("/dashboard", auth, (req, res) => {
+  console.log(req.user);
+  res.send("Welcome to dashboard");
 });
 
 module.exports = app;
